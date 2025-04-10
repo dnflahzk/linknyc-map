@@ -1,0 +1,149 @@
+/* ------------------------------
+  Intro Section
+------------------------------ */
+.intro-section {
+    background-color: #fff7e6;
+    padding: 30px 40px;
+    border-radius: 0;                 
+    margin: 0 0 20px 0;
+    box-shadow: none;                
+    width: 100%;                     
+  }
+  
+  .intro-section h1 {
+    margin-top: 0;
+    font-size: 28px;
+    font-weight: 600;
+    text-align: left;
+  }
+  
+  .intro-section .description {
+    font-size: 16px;
+    line-height: 1.7;
+    color: #444;
+    margin: 0;
+    text-align: left;
+    white-space: nowrap;         
+  }
+  
+  /* ------------------------------
+    Global Base Styles
+  ------------------------------ */
+  body {
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    line-height: 1.5;
+    margin: 0;
+    padding: 10px;
+    background-color: #fdf9f1;
+    color: #333;
+  }
+  
+  button,
+  input {
+    padding: 6px 10px;
+    font-size: 20px;
+    font-family: inherit;
+  }
+  
+  /* ------------------------------
+    Map Container and Map Box
+  ------------------------------ */
+  #map-container {
+    width: 100%;
+  }
+  
+  #map {
+    width: 100%;
+    height: 900px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+  
+  /* ------------------------------
+    Map Controls Layout
+  ------------------------------ */
+  #map-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 10px;
+    gap: 10px;
+  }
+  
+  .control-left,
+  .control-right {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  /* ------------------------------
+    Image Overlay for Kiosk Modal
+  ------------------------------ */
+  #image-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 1000;
+  }
+  
+  #image-overlay img {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 10px;
+  }
+  
+  #image-overlay button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+  
+  /* ------------------------------
+    Legend for Map
+  ------------------------------ */
+  #map-container {
+    position: relative;
+    width: 100%;
+  }
+  
+  /* ✅ Legend styling */
+  #legend {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: white;
+    padding: 10px 14px;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    font-size: 14px;
+    z-index: 1000;
+    color: #333;
+    line-height: 1.4;
+  }
+  
+  /* Dot indicator for kiosk types */
+  .legend-dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  
+  
+  .map-label {
+    vertical-align: middle;
+  }
+  
