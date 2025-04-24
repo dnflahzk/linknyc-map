@@ -1,149 +1,222 @@
-/* ------------------------------
-  Intro Section
------------------------------- */
+/* ==============================
+   Intro Section
+============================== */
 .intro-section {
-    background-color: #fff7e6;
-    padding: 30px 40px;
-    border-radius: 0;                 
-    margin: 0 0 20px 0;
-    box-shadow: none;                
-    width: 100%;                     
-  }
-  
-  .intro-section h1 {
-    margin-top: 0;
-    font-size: 28px;
-    font-weight: 600;
-    text-align: left;
-  }
-  
-  .intro-section .description {
-    font-size: 16px;
-    line-height: 1.7;
-    color: #444;
-    margin: 0;
-    text-align: left;
-    white-space: nowrap;         
-  }
-  
-  /* ------------------------------
-    Global Base Styles
-  ------------------------------ */
-  body {
-    font-family: 'Poppins', sans-serif;
-    font-size: 20px;
-    line-height: 1.5;
-    margin: 0;
-    padding: 10px;
-    background-color: #fdf9f1;
-    color: #333;
-  }
-  
-  button,
-  input {
-    padding: 6px 10px;
-    font-size: 20px;
-    font-family: inherit;
-  }
-  
-  /* ------------------------------
-    Map Container and Map Box
-  ------------------------------ */
-  #map-container {
-    width: 100%;
-  }
-  
-  #map {
-    width: 100%;
-    height: 900px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-  }
-  
-  /* ------------------------------
-    Map Controls Layout
-  ------------------------------ */
-  #map-controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    padding: 10px;
-    gap: 10px;
-  }
-  
-  .control-left,
-  .control-right {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  /* ------------------------------
-    Image Overlay for Kiosk Modal
-  ------------------------------ */
-  #image-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    z-index: 1000;
-  }
-  
-  #image-overlay img {
-    max-width: 90%;
-    max-height: 90%;
-    border-radius: 10px;
-  }
-  
-  #image-overlay button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 16px;
-  }
-  
-  /* ------------------------------
-    Legend for Map
-  ------------------------------ */
-  #map-container {
-    position: relative;
-    width: 100%;
-  }
-  
-  /* ✅ Legend styling */
-  #legend {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    background: white;
-    padding: 10px 14px;
-    border-radius: 6px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    font-size: 14px;
-    z-index: 1000;
-    color: #333;
-    line-height: 1.4;
-  }
-  
-  /* Dot indicator for kiosk types */
-  .legend-dot {
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    margin-right: 8px;
-    vertical-align: middle;
-  }
-  
-  
-  .map-label {
-    vertical-align: middle;
-  }
-  
+  background-color: #fff7e6;
+  padding: 30px 40px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.intro-section h1 {
+  margin-top: 0;
+  font-size: 28px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.intro-section .description {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #444;
+  margin: 0;
+  text-align: left;
+  white-space: nowrap;
+}
+
+/* ==============================
+   Global Base Styles
+============================== */
+body {
+  font-family: 'Poppins', sans-serif;
+  font-size: 20px;
+  line-height: 1.5;
+  margin: 0;
+  padding: 10px;
+  background-color: #fdf9f1;
+  color: #333;
+}
+
+button, input, select {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* ==============================
+   Map Container & Styling
+============================== */
+#map-container {
+  position: relative;
+  width: 100%;
+}
+
+#map {
+  width: 100%;
+  height: 500px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+/* ==============================
+   Map Controls
+============================== */
+.map-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 10px;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.geocoder-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;   
+}
+
+.search-btn, .reset-btn {
+  padding: 8px 16px;
+  font-size: 14px;
+  height: 40px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.search-btn, .reset-btn {
+  width: 80px;
+  text-align: center;
+}
+
+
+/* Basemap Style Switcher */
+.basemap-switcher {
+  position: absolute;
+  top: 15px;
+  right: 2%;
+  z-index: 1000;
+}
+
+.basemap-switcher select {
+  font-size: 16px;
+  padding: 6px 10px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* ==============================
+   Toast Guide (Tip Popup)
+============================== */
+.toast-guide {
+  position: absolute;
+  top: 23%;
+  right: 5%;
+  background-color: #333;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 6px;
+  opacity: 0.95;
+  display: none;
+  z-index: 1000;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+/* ==============================
+   Legend Styling
+============================== */
+#legend {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: white;
+  padding: 10px 14px;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  font-size: 14px;
+  z-index: 1000;
+  color: #333;
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+/* ==============================
+   Image Overlay (Modal)
+============================== */
+#image-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 1000;
+}
+
+#image-overlay img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 10px;
+}
+
+#image-overlay button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
+/* ==============================
+   Kiosk Info Section
+============================== */
+.kiosk-info-section {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+  margin-top: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.kiosk-info-section p {
+  font-size: 15px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.kiosk-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* Kiosk Buttons */
+.btn-link1, .btn-link5g {
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.btn-link1 { background-color: #28a745; }
+.btn-link5g { background-color: #007bff; }
+
+.btn-link1:hover, .btn-link5g:hover {
+  opacity: 0.8;
+}

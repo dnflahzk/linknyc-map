@@ -1,125 +1,144 @@
-mapboxgl.accessToken ='pk.eyJ1IjoidGszMzk2IiwiYSI6ImNtOWJvZW04dzBqeGsya3EyNHpreDRkbncifQ.3FH9RYuE9AVUfIRxGLfgQw'; 
+// Set Mapbox Access Token
+mapboxgl.accessToken = 'pk.eyJ1IjoidGszMzk2IiwiYSI6ImNtOWJvZW04dzBqeGsya3EyNHpreDRkbncifQ.3FH9RYuE9AVUfIRxGLfgQw';
 
+
+// Initialize Map
 let map = new mapboxgl.Map({
   container: 'map',
-  style: 'mapbox://styles/mapbox/streets-v12',
+  style: 'mapbox://styles/mapbox/dark-v11',
   center: [-74.0060, 40.7128],
   zoom: 12
 });
 map.addControl(new mapboxgl.NavigationControl());
-let markers = [];
 
+
+// Global variable to store GeoJSON data
+let kioskGeoJSON = null;
+
+/* ===============================
+   Load Kiosks as GeoJSON Layer
+================================ */
+map.on('load', function () {
+  fetch('https://data.cityofnewyork.us/resource/s4kf-3yrf.json')
+    .then(res => res.json())
+    .then(data => {
+      kioskGeoJSON = {
+        type: "FeatureCollection",
+        features: data.filter(k => k.latitude && k.longitude).map(k => ({
+          type: "Feature",
+          geometry: {
+            type: "Point",
+            coordinates: [parseFloat(k.longitude), parseFloat(k.latitude)]
+          },
+          properties: {
+            planned_kiosk_type: k.planned_kiosk_type || "Unknown",
+            street_address: k.street_address || "No address"
+          }
+        }))
+      };
+
+      addKioskLayer();
+    });
+});
+
+/* ===============================
+   Function: Add Kiosk Layer (Color Logic)
+================================ */
+function addKioskLayer() {
+  if (!map.getSource('kiosks')) {
+    map.addSource('kiosks', { type: 'geojson', data: kioskGeoJSON });
+  }
+
+  if (!map.getLayer('kiosks-layer')) {
+    map.addLayer({
+      id: 'kiosks-layer',
+      type: 'circle',
+      source: 'kiosks',
+      paint: {
+        'circle-radius': 6,
+        'circle-color': [
+          'case',
+          ['in', '5G', ['get', 'planned_kiosk_type']], '#007bff', 
+          '#28a745'
+        ],
+        'circle-stroke-width': 1,
+        'circle-stroke-color': '#fff'
+      }
+    });
+
+    // Popup on click
+    map.on('click', 'kiosks-layer', function (e) {
+      const coords = e.features[0].geometry.coordinates.slice();
+      const props = e.features[0].properties;
+
+      new mapboxgl.Popup()
+        .setLngLat(coords)
+        .setHTML(`<b>Type:</b> ${props.planned_kiosk_type}<br><b>Address:</b> ${props.street_address}`)
+        .addTo(map);
+    });
+
+    map.on('mouseenter', 'kiosks-layer', () => map.getCanvas().style.cursor = 'pointer');
+    map.on('mouseleave', 'kiosks-layer', () => map.getCanvas().style.cursor = '');
+  }
+}
+
+/* ===============================
+   Change Base Map Style & Restore Elements
+================================ */
 function changeMapStyle(style) {
   const styles = {
     'streets': 'mapbox://styles/mapbox/streets-v12',
     'satellite': 'mapbox://styles/mapbox/satellite-v9',
     'dark': 'mapbox://styles/mapbox/dark-v11'
   };
+
   map.setStyle(styles[style]);
-}  
 
-function resizeMapWidth(width) {
-  document.getElementById("map").style.width = width + "%";
-  document.getElementById("mapWidthValue").innerText = width + "%";
-  map.resize();
+  map.on('style.load', function() {
+    
+    const geoContainer = document.getElementById('geocoder');
+    geoContainer.innerHTML = '';
+    geoContainer.appendChild(geocoder.onAdd(map));
+
+    if (kioskGeoJSON) {
+      addKioskLayer();
+    }
+  });
 }
 
-function clearMarkers() {
-  markers.forEach(marker => marker.remove());
-  markers = [];
-}
+/* ===============================
+   Initialize Geocoder
+================================ */
+const geocoder = new MapboxGeocoder({
+  accessToken: mapboxgl.accessToken,
+  mapboxgl: mapboxgl,
+  placeholder: "Enter your address",
+  countries: 'US',
+  bbox: [-74.2591, 40.4774, -73.7004, 40.9176],
+  marker: { color: 'red' },
+  zoom: 15
+});
 
-function addMarker(lat, lon, color, tooltip) {
-  const el = document.createElement('div');
-  el.className = 'marker';
-  el.style.backgroundColor = color;
-  el.style.width = '10px';
-  el.style.height = '10px';
-  el.style.borderRadius = '50%';
+geocoder.on('result', function() {
+  const toast = document.getElementById('guide-toast');
+  toast.style.display = 'block';
+  setTimeout(() => { toast.style.display = 'none'; }, 4000);
+});
 
-  const marker = new mapboxgl.Marker(el)
-    .setLngLat([lon, lat])
-    .setPopup(new mapboxgl.Popup().setHTML(tooltip))
-    .addTo(map);
+// Attach Geocoder initially
+document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
 
-  markers.push(marker);
-}
-
-const tooltip = `<b>Type: ${type}</b><br>${address}`;
-addMarker(+k.latitude, +k.longitude, color, tooltip);
-
-function loadAllKiosks() {
-  fetch(`https://data.cityofnewyork.us/resource/s4kf-3yrf.json`)
-    .then(res => res.json())
-    .then(data => {
-      clearMarkers();
-      document.getElementById("total-count").innerText = `Total kiosks displayed: ${data.length}`;
-      data.forEach(k => {
-        if (k.latitude && k.longitude) {
-          const type = k.planned_kiosk_type || "Unknown";
-          const address = k.street_address || "No address";
-          const color = type.toLowerCase().includes("5g") ? "blue" : "green";
-          const tooltip = `<b>Type: ${type}</b><br>${address}`;
-          addMarker(+k.latitude, +k.longitude, color, tooltip);
-        }
-      });
-    });
-}
-
-function loadMap() {
-  const zipcode = document.getElementById("zipcode").value.trim();
-  if (!zipcode) {
-    alert("Please enter a ZIPCODE.");
-    document.getElementById("result-count").innerText = "";
-    return;
-  }
-
-  fetch(`https://data.cityofnewyork.us/resource/s4kf-3yrf.json?postcode=${zipcode}`)
-    .then(res => res.json())
-    .then(data => {
-      clearMarkers();
-      document.getElementById("result-count").innerText =
-        `Found ${data.length} kiosks in ZIPCODE ${zipcode}`;
-
-      if (data.length === 0) {
-        alert("No LinkNYC locations found for this ZIPCODE.");
-        return;
-      }
-
-      data.forEach(k => {
-        if (k.latitude && k.longitude) {
-          const type = k.planned_kiosk_type || "Unknown";
-          const address = k.street_address || "No address";
-          const color = type.toLowerCase().includes("5g") ? "blue" : "green";
-          const tooltip = `<b>Type: ${type}</b><br>${address}`;
-          addMarker(+k.latitude, +k.longitude, color, tooltip);
-        }
-      });
-      map.on('zoom', () => {
-        const zoom = map.getZoom();
-        const size = zoom < 11 ? 6 : zoom < 13 ? 10 : 14;
-        markers.forEach(marker => {
-          const el = marker.getElement();
-          el.style.width = `${size}px`;
-          el.style.height = `${size}px`;
-        });
-      });
-      map.flyTo({
-        center: [+data[0].longitude, +data[0].latitude],
-        zoom: 14
-      });
-    });
-}
-
+/* ===============================
+   Reset Map View
+================================ */
 function resetMap() {
-    document.getElementById("zipcode").value = "";
-    document.getElementById("result-count").innerText = "";
-    loadAllKiosks();
-  }
-  
-  window.resetMap = resetMap;
-  
+  map.flyTo({ center: [-74.0060, 40.7128], zoom: 12 });
+}
+window.resetMap = resetMap;
 
+/* ===============================
+   Show / Hide Kiosk Image
+================================ */
 function showImage(type) {
   const img = document.getElementById("kiosk-image");
   img.src = type === "link1"
@@ -131,6 +150,3 @@ function showImage(type) {
 function hideImage() {
   document.getElementById("image-overlay").style.display = "none";
 }
-
-window.onload = loadAllKiosks;
-

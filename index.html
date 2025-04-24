@@ -5,69 +5,92 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>LinkNYC Kiosk Map</title>
 
-  <!-- Mapbox & Fonts -->
+  <!-- Mapbox CSS & JS -->
   <link href="https://api.mapbox.com/mapbox-gl-js/v3.11.0/mapbox-gl.css" rel="stylesheet">
   <script src="https://api.mapbox.com/mapbox-gl-js/v3.11.0/mapbox-gl.js"></script>
+
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- Custom CSS -->
   <link rel="stylesheet" href="styles.css" />
+
+  <!-- Mapbox Geocoder Plugin -->
+  <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.css">
+  <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.min.js"></script>
 </head>
 
 <body>
-
+  <!-- Intro Section -->
   <div class="intro-section">
     <h1>Explore LinkNYC Kiosks in New York City</h1>
     <p class="description">
-      LinkNYC is a city-wide network of free, high-speed public Wi-Fi kiosks in New York City. <br>
-      These kiosks replace outdated payphones and provide free internet, phone calls, device charging, and access to city services. <br>
-      There are two types of kiosks: <strong>LinkNYC Classic (Link1.0)</strong> and <strong>Link5G</strong>. <br>
-      Link1.0 units offer Wi-Fi and essential services, while Link5G kiosks include upgraded hardware and 5G antennas to expand high-speed wireless coverage across the city.
+      LinkNYC is a city-wide network of free, high-speed public Wi-Fi kiosks. <br>
+      These kiosks replace outdated payphones and provide internet, phone calls, device charging, and city services. <br>
+      There are two types: <strong>LinkNYC Classic (Link1.0)</strong> and <strong>Link5G</strong>.
     </p>
   </div>
 
-  <div id="map-controls">
-    <div class="control-left">
-      <label for="zipcode"><strong>Filter kiosks by ZIP Code:</strong></label>
-      <input type="text" id="zipcode" placeholder="e.g., 10001" />
-      <button onclick="loadMap()">Filter</button>
-      <button onclick="resetMap()">Reset</button>      
-    </div>
-
-    <div class="control-right">
-      <strong>Change map background style:</strong>
-      <button onclick="changeMapStyle('streets')">Streets</button>
-      <button onclick="changeMapStyle('satellite')">Satellite</button>
-      <button onclick="changeMapStyle('dark')">Dark</button>
+  <!-- Map Controls -->
+  <div class="map-controls">
+      <div class="geocoder-container">
+        <label><strong>Find kiosks near your address:</strong></label>
+        <div id="geocoder"></div>
+        <button onclick="triggerSearch()" class="search-btn">Search</button>
+        <button onclick="resetMap()" class="reset-btn">Reset</button>
+     </div>     
     </div>
   </div>
+ 
 
+  <!-- Toast Guide (Tip popup) -->
+  <div id="guide-toast" class="toast-guide">
+    Click on the circles to see kiosk details!
+  </div>
+
+  <!-- Map Container -->
   <div id="map-container">
     <div id="map"></div>
-    <div id="legend">
-        <strong>Legend</strong>
-        <p><span class="legend-dot" style="background-color: green;"></span> LinkNYC Classic(1.0)</p>
-        <p><span class="legend-dot" style="background-color: blue;"></span> LinkNYC 5G</p>
-      </div>
-</div>
-  
-  
 
+    <!-- Map Legend -->
+    <div id="legend">
+      <strong>Legend</strong>
+      <p><span class="legend-dot" style="background-color: green;"></span> LinkNYC Classic (1.0)</p>
+      <p><span class="legend-dot" style="background-color: blue;"></span> LinkNYC 5G</p>
+    </div>
+
+    <!-- Basemap Style Switcher -->
+    <div class="basemap-switcher">
+      <select onchange="changeMapStyle(this.value)">
+         <option value="streets">🗺️ Streets</option>
+         <option value="satellite">🛰️ Satellite</option>
+         <option value="dark" selected>🌙 Dark</option>  
+      </select>
+   </div>   
+  </div>
+
+  <!-- (Optional) Result Counters -->
   <p id="result-count"></p>
   <p id="total-count"></p>
 
+  <!-- Kiosk Info Section -->
+  <div class="kiosk-info-section">
+    <p><strong>What's the difference between Link1.0 and Link5G?</strong><br>
+       Click on a button below to learn more about each kiosk type.
+    </p>
+    <div class="kiosk-buttons">
+      <button onclick="showImage('link1')" class="btn-link1">Show Link1.0 Kiosk</button>
+      <button onclick="showImage('link5g')" class="btn-link5g">Show Link5G Kiosk</button>
+    </div>
+  </div>
 
-<!-- Question + instruction -->
-<p><strong>What's the difference between Link1.0 and Link5G?</strong></p>
-<p>Click on an image below to learn more about each kiosk type.</p>
-
-<!-- Clickable images -->
-  <button onclick="showImage('link1')">Show Link1.0 Kiosk</button>
-  <button onclick="showImage('link5g')">Show Link5G Kiosk</button>
-
+  <!-- Image Overlay Modal -->
   <div id="image-overlay" style="display:none;">
     <img id="kiosk-image" />
     <button onclick="hideImage()">Close</button>
   </div>
 
+  <!-- Custom JavaScript -->
   <script src="script.js"></script>
 </body>
 </html>
