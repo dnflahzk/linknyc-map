@@ -1,30 +1,32 @@
-
-/* ===============================
+/* ================================================
  1. Set Mapbox Access Token
-================================ */
+================================================ */
 mapboxgl.accessToken = 'pk.eyJ1IjoidGszMzk2IiwiYSI6ImNtOWJvZW04dzBqeGsya3EyNHpreDRkbncifQ.3FH9RYuE9AVUfIRxGLfgQw';
 
 
-/* ===============================
- 2. Initialize Map
-================================ */
+/* ================================================
+ 2. Initialize the Map
+   - Sets map container, style, center, and zoom
+================================================ */
 let map = new mapboxgl.Map({
   container: 'map',
   style: 'mapbox://styles/mapbox/dark-v11',
-  center: [-74.0060, 40.7128],
+  center: [-74.0060, 40.7128], // NYC
   zoom: 10
 });
 
 
-/* ===============================
- 3. Initialize Geocoder
-================================ */
+/* ================================================
+ 3. Add Mapbox Geocoder
+   - Address search with red marker
+   - Toast and cleanup on result
+================================================ */
 const geocoder = new MapboxGeocoder({
   accessToken: mapboxgl.accessToken,
   mapboxgl: mapboxgl,
   placeholder: "Enter your address",
   countries: 'US',
-  bbox: [-74.2591, 40.4774, -73.7004, 40.9176],
+  bbox: [-74.2591, 40.4774, -73.7004, 40.9176], // NYC bounds
   marker: { color: 'red' },
   zoom: 15
 });
@@ -41,18 +43,24 @@ geocoder.on('result', function () {
 });
 
 
-/* ===============================
- 4. Declare Global Variables
-================================ */
+/* ================================================
+ 4. Global Variables
+================================================ */
 let kioskGeoJSON = null;
 let userMarker = null;
 let highlightedMarkers = [];
 let geolocateControl = null;
 
 
-/* ===============================
+/* ================================================
  5. Utility Functions
-================================ */
+   - Sidebar toggle, geocoder reattach, kiosk layers
+================================================ */
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  sidebar.classList.toggle('closed');
+}
+
 function reattachGeocoder() {
   const geoContainer = document.getElementById('geocoder');
   geoContainer.innerHTML = '';
@@ -60,6 +68,7 @@ function reattachGeocoder() {
 }
 
 function addKioskLayers() {
+  // Classic kiosks (green)
   map.addLayer({
     id: 'link1-layer',
     type: 'circle',
@@ -73,6 +82,7 @@ function addKioskLayers() {
     }
   });
 
+  // 5G kiosks (blue)
   map.addLayer({
     id: 'link5g-layer',
     type: 'circle',
@@ -92,10 +102,15 @@ function setCursorEvents(layerId) {
   map.on('mouseleave', layerId, () => map.getCanvas().style.cursor = '');
 }
 
+
+/* ================================================
+ 6. Geolocation & Buffer
+   - User marker, 800m buffer, highlight nearby kiosks
+================================================ */
 function addGeolocateControl() {
   geolocateControl = new mapboxgl.GeolocateControl({
     positionOptions: { enableHighAccuracy: true },
-    trackUserLocation: true,
+    trackUserLocation: false,
     showUserHeading: true
   });
   map.addControl(geolocateControl, 'top-right');
@@ -125,8 +140,10 @@ function addGeolocateControl() {
     });
 
     const bounds = turf.bbox(circle);
-    map.fitBounds(bounds, { padding: 40, duration: 1000 });
-    map.flyTo({ center: [userLngLat[0] - 0.01, userLngLat[1]], zoom: 14, speed: 0.8, curve: 1, essential: true });
+    map.fitBounds(bounds, {
+      padding: window.innerWidth < 768 ? 30 : 40,
+      duration: 1000
+    });
 
     const highlighted = kioskGeoJSON.features.filter(f => turf.booleanPointInPolygon(f.geometry, circle));
 
@@ -149,9 +166,9 @@ function addGeolocateControl() {
 }
 
 
-/* ===============================
- 6. Load Map and Data
-================================ */
+/* ================================================
+ 7. Load Map & Kiosk CSV Data (GeoJSON Conversion)
+================================================ */
 map.on('load', function () {
   map.addControl(new mapboxgl.NavigationControl(), 'top-right');
   addGeolocateControl();
@@ -178,12 +195,10 @@ map.on('load', function () {
               }
             }));
 
-          // Add GeoJSON source and layers
           kioskGeoJSON = { type: 'FeatureCollection', features: features };
           map.addSource('kiosks-local', { type: 'geojson', data: kioskGeoJSON });
           addKioskLayers();
 
-          // Add popup and cursor events
           ['link1-layer', 'link5g-layer'].forEach(layer => {
             map.on('click', layer, function (e) {
               const props = e.features[0].properties;
@@ -196,12 +211,8 @@ map.on('load', function () {
             setCursorEvents(layer);
           });
 
-          // ✅ Once data & layers are ready, do the zoom animation
-          map.flyTo({
-            zoom: 9,
-            duration: 0
-          });
-
+          // Smooth zoom animation
+          map.flyTo({ zoom: 9, duration: 0 });
           setTimeout(() => {
             map.flyTo({
               center: [-74.0060, 40.7128],
@@ -210,20 +221,17 @@ map.on('load', function () {
               curve: 1.2,
               easing: (t) => t
             });
-            // Make sure map recalculates layout after animation
-            setTimeout(() => {
-              map.resize();
-            }, 1000);
+            setTimeout(() => map.resize(), 1000);
           }, 1200);
-
         }
       });
     });
 });
 
-/* ===============================
- 7. Style Switching
-================================ */
+
+/* ================================================
+ 8. Map Style Switcher
+================================================ */
 function changeMapStyle(style) {
   const styles = {
     'streets': 'mapbox://styles/mapbox/streets-v12',
@@ -241,9 +249,9 @@ function changeMapStyle(style) {
 }
 
 
-/* ===============================
- 8. Map Reset
-================================ */
+/* ================================================
+ 9. Reset Map to Default View
+================================================ */
 function resetMap() {
   clearHighlightsAndBuffer();
 
@@ -257,9 +265,9 @@ function resetMap() {
 window.resetMap = resetMap;
 
 
-/* ===============================
- 9. Cleanup Function
-================================ */
+/* ================================================
+10. Clear Markers & Buffer Zone
+================================================ */
 function clearHighlightsAndBuffer() {
   if (userMarker) {
     userMarker.remove();
@@ -272,9 +280,9 @@ function clearHighlightsAndBuffer() {
 }
 
 
-/* ===============================
-10. Layer Toggle Controls
-================================ */
+/* ================================================
+11. Kiosk Layer Toggle (Checkbox Control)
+================================================ */
 function toggleLayer(type) {
   const layerId = type === 'Link1.0' ? 'link1-layer' : 'link5g-layer';
   const checkbox = document.getElementById(type === 'Link1.0' ? 'toggle-link1' : 'toggle-link5g');
@@ -286,9 +294,9 @@ function toggleLayer(type) {
 }
 
 
-/* ===============================
-11. Image Modal (Kiosk Preview)
-================================ */
+/* ================================================
+12. Kiosk Image Modal Viewer
+================================================ */
 function showImage(type) {
   const img = document.getElementById("kiosk-image");
   img.src = type === "link1"

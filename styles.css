@@ -1,6 +1,7 @@
-/* ===============================
-   1. Global Layout Structure
-=============================== */
+/* ================================================
+ 1. Global Layout Structure
+ - Sets up full-screen layout, font, and disables scroll
+================================================ */
 html, body {
   margin: 0;
   padding: 0;
@@ -28,9 +29,11 @@ html, body {
   min-height: 100vh;
 }
 
-/* ===============================
-   2. Sidebar Panel Layout
-=============================== */
+
+/* ================================================
+ 2. Sidebar Panel
+ - Styles for the yellow translucent sidebar
+================================================ */
 #sidebar {
   position: absolute;
   top: 20px;
@@ -43,16 +46,16 @@ html, body {
   z-index: 1000;
   overflow-y: hidden;
   max-height: 100vh;
-
-  /* Zoomed-out effect */
   transform: scale(0.8);
   transform-origin: top left;
   transition: transform 0.3s ease;
 }
 
-/* ===============================
-   3. Intro Section
-=============================== */
+
+/* ================================================
+ 3. Intro Section
+ - Title and description section inside the sidebar
+================================================ */
 .intro-section {
   margin-bottom: 20px;
 }
@@ -69,9 +72,11 @@ html, body {
   color: #444;
 }
 
-/* ===============================
-   4. Map Controls (Search + Geocoder)
-=============================== */
+
+/* ================================================
+ 4. Map Controls (Search and Reset)
+ - Styles for geocoder and control buttons
+================================================ */
 .map-controls {
   margin-top: 20px;
   display: flex;
@@ -126,9 +131,11 @@ html, body {
   line-height: 1;
 }
 
-/* ===============================
-   5. Legend & Filter Controls
-=============================== */
+
+/* ================================================
+ 5. Legend and Layer Toggles
+ - Custom legend boxes and toggle styles
+================================================ */
 .styled-legend {
   background-color: #f9f9f9;
   border-radius: 8px;
@@ -204,9 +211,11 @@ html, body {
   transition: box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
-/* ===============================
-   6. Kiosk Info Buttons
-=============================== */
+
+/* ================================================
+ 6. Kiosk Info Buttons
+ - Styles for Link1.0 and Link5G info buttons
+================================================ */
 .kiosk-info-section {
   background-color: #f9f9f9;
   border: 1px solid #ddd;
@@ -254,9 +263,11 @@ html, body {
   opacity: 0.8;
 }
 
-/* ===============================
-   7. Image Modal Overlay
-=============================== */
+
+/* ================================================
+ 7. Image Modal
+ - Full-screen popup image viewer
+================================================ */
 #image-overlay {
   position: fixed;
   top: 0;
@@ -284,9 +295,10 @@ html, body {
   cursor: pointer;
 }
 
-/* ===============================
-   8. Toast Popup (Guide Tip)
-=============================== */
+
+/* ================================================
+ 8. Toast Notification (Guide Tip)
+================================================ */
 .toast-guide {
   position: absolute;
   bottom: 60%;
@@ -302,12 +314,13 @@ html, body {
   white-space: nowrap;
 }
 
-/* ===============================
-   9. Basemap Style Switcher
-=============================== */
+
+/* ================================================
+ 9. Basemap Style Switcher
+================================================ */
 .basemap-switcher {
   position: absolute;
-  top:10px;
+  top: 10px;
   right: 50px;
   z-index: 1000;
   background: rgba(160, 152, 152, 0.9);
@@ -323,9 +336,11 @@ html, body {
   border-radius: 4px;
 }
 
-/* ===============================
-   10. Highlighted Kiosk Marker
-=============================== */
+
+/* ================================================
+10. Highlighted Kiosk Marker
+ - Neon-style red rings for kiosks in buffer
+================================================ */
 .mapboxgl-circle-neon {
   width: 12px;
   height: 12px;
@@ -333,13 +348,72 @@ html, body {
   background-color: transparent;
   border: 2px solid rgba(255, 51, 51, 0.5);
   box-shadow: 0 0 6px 2px rgba(255, 51, 51, 0.3);
-
-  /* Fix alignment */
   transform: translate(-50%, -50%);
 }
-
 
 .mapboxgl-circle-neon:hover {
   box-shadow: 0 0 12px 4px rgba(255, 51, 51, 1);
   transition: box-shadow 0.3s ease;
+}
+
+
+/* ================================================
+11. Sidebar Toggle Button
+================================================ */
+#toggle-sidebar {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1100;
+  background-color: #444;
+  color: #fff;
+  border: none;
+  padding: 6px 10px;
+  font-size: 15px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#sidebar.closed {
+  display: none;
+}
+
+
+/* ================================================
+12. Responsive Design (Mobile)
+================================================ */
+@media (max-width: 768px) {
+  #sidebar {
+    transform: scale(0.7);
+    transform-origin: top left;
+    top: 30px;
+  }
+
+  #toggle-sidebar {
+    top: 10px;
+    left: 10px;
+  }
+
+  .toast-guide {
+    font-size: 12px;
+    bottom: 40%;
+    left: 20%;
+    padding: 6px 10px;
+    max-width: 90%;
+    white-space: normal;
+  }
+}
+
+@media (max-width: 300px) {
+  .basemap-switcher {
+    transform: scale(0.7);
+    padding: 1px 0px;
+    top: 30px;
+    right: 10px;
+  }
+
+  .basemap-switcher select {
+    font-size: 8px;
+    padding: 1px;
+  }
 }
