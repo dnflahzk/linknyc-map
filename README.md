@@ -6,10 +6,13 @@ This project is an interactive map built with Mapbox GL JS that visualizes LinkN
 
 ## Dataset Information
 
-As of May 11, 2025, this map uses a static dataset hosted on GitHub:
+As of May 11, 2025, this project uses the most up-to-date LinkNYC kiosk dataset available.
+
+Due to the NYC Open Data API limiting results to 1,000 records, the full dataset was manually downloaded and saved as a CSV on May 11, 2025. It is hosted directly in this GitHub repository:
+
 📁 LinkNYC_Kiosk_Locations_20250426.csv
 
-Due to the NYC Open Data API limiting responses to 1,000 records, the full dataset was manually downloaded and uploaded to this project. This ensures that all available kiosks are shown on the map without pagination or API query limits.
+This ensures that the map accurately reflects all kiosk locations across New York City without API limitations or missing records.
 
 ---
 
