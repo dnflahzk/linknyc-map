@@ -1,159 +1,262 @@
-/* ==============================
-   Intro Section
-============================== */
-.intro-section {
-  background-color: #fff7e6;
-  padding: 30px 40px;
-  margin-bottom: 20px;
-  width: 100%;
-}
-
-.intro-section h1 {
-  margin-top: 0;
-  font-size: 28px;
-  font-weight: 600;
-  text-align: left;
-}
-
-.intro-section .description {
-  font-size: 16px;
-  line-height: 1.7;
-  color: #444;
+/* ===============================
+   1. Global Layout Structure
+=============================== */
+html, body {
   margin: 0;
-  text-align: left;
-  white-space: nowrap;
-}
-
-/* ==============================
-   Global Base Styles
-============================== */
-body {
+  padding: 0;
+  height: 100%;
   font-family: 'Poppins', sans-serif;
-  font-size: 20px;
-  line-height: 1.5;
-  margin: 0;
-  padding: 10px;
-  background-color: #fdf9f1;
-  color: #333;
+  overflow: hidden;
 }
 
-button, input, select {
-  font-family: inherit;
-  cursor: pointer;
+#layout-container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
 }
 
-/* ==============================
-   Map Container & Styling
-============================== */
 #map-container {
+  flex-grow: 1;
   position: relative;
-  width: 100%;
+  height: 100vh;
+  min-height: 100vh;
 }
 
 #map {
   width: 100%;
-  height: 500px;
-  border: 1px solid #ccc;
+  height: 100%;
+  min-height: 100vh;
+}
+
+/* ===============================
+   2. Sidebar Panel Layout
+=============================== */
+#sidebar {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 440px;
+  background-color: rgba(255, 247, 230, 0.85);
+  padding: 20px;
   border-radius: 8px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  overflow-y: hidden;
+  max-height: 100vh;
+
+  /* Zoomed-out effect */
+  transform: scale(0.8);
+  transform-origin: top left;
+  transition: transform 0.3s ease;
 }
 
-/* ==============================
-   Map Controls
-============================== */
+/* ===============================
+   3. Intro Section
+=============================== */
+.intro-section {
+  margin-bottom: 20px;
+}
+
+.intro-section h1 {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0 0 10px;
+}
+
+.intro-section .description {
+  font-size: 12px;
+  line-height: 1.6;
+  color: #444;
+}
+
+/* ===============================
+   4. Map Controls (Search + Geocoder)
+=============================== */
 .map-controls {
+  margin-top: 20px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  padding: 10px;
+  flex-direction: column;
   gap: 10px;
-  margin-bottom: 15px;
 }
 
-.geocoder-container {
+.geocoder-row {
   display: flex;
   align-items: center;
-  gap: 8px;   
+  gap: 8px;
+  margin-top: 8px;
 }
 
-.search-btn, .reset-btn {
-  padding: 8px 16px;
-  font-size: 14px;
-  height: 40px;
-  border: 1px solid #ccc;
-  background-color: #f9f9f9;
-  cursor: pointer;
-  border-radius: 4px;
+.geocoder-box {
+  flex: 1;
+  min-width: 0;
 }
 
-.search-btn, .reset-btn {
-  width: 80px;
-  text-align: center;
+#geocoder {
+  flex-grow: 1;
 }
 
-
-/* Basemap Style Switcher */
-.basemap-switcher {
-  position: absolute;
-  top: 15px;
-  right: 2%;
-  z-index: 1000;
-}
-
-.basemap-switcher select {
-  font-size: 16px;
+.search-btn,
+.reset-btn {
   padding: 6px 10px;
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
+  font-size: 13px;
   border-radius: 4px;
-}
-
-/* ==============================
-   Toast Guide (Tip Popup)
-============================== */
-.toast-guide {
-  position: absolute;
-  top: 23%;
-  right: 5%;
-  background-color: #333;
-  color: #fff;
-  padding: 10px 16px;
-  border-radius: 6px;
-  opacity: 0.95;
-  display: none;
-  z-index: 1000;
-  font-size: 14px;
+  background-color: #eee;
+  border: 1px solid #ccc;
   white-space: nowrap;
+  cursor: pointer;
 }
 
-/* ==============================
-   Legend Styling
-============================== */
-#legend {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  background: white;
-  padding: 10px 14px;
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+.search-btn:hover,
+.reset-btn:hover {
+  background-color: #ddd;
+}
+
+.search-btn:active,
+.reset-btn:active {
+  background-color: #ccc;
+}
+
+.mapboxgl-ctrl-geocoder {
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+.person-marker {
+  font-size: 40px;
+  line-height: 1;
+}
+
+/* ===============================
+   5. Legend & Filter Controls
+=============================== */
+.styled-legend {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 14px;
   font-size: 14px;
-  z-index: 1000;
-  color: #333;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  margin-top: 20px;
+}
+
+.legend-boxes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
 }
 
 .legend-dot {
-  display: inline-block;
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  margin-right: 8px;
-  vertical-align: middle;
+  display: inline-block;
+  margin-right: 4px;
+  flex-shrink: 0;
 }
 
-/* ==============================
-   Image Overlay (Modal)
-============================== */
+.legend-label {
+  flex-grow: 1;
+  font-size: 14px;
+  cursor: help;
+}
+
+.green-border,
+.blue-border {
+  background-color: white;
+  border-radius: 5px;
+  padding: 4px 6px;
+  border-width: 2px;
+  border-style: solid;
+}
+
+.green-border {
+  color: #28a745;
+  border-color: #28a745;
+}
+.green-border:hover {
+  border-color: #1e7e34;
+  background-color: rgba(40, 167, 69, 0.05);
+}
+
+.blue-border {
+  color: #007bff;
+  border-color: #007bff;
+}
+.blue-border:hover {
+  border-color: #0056b3;
+  background-color: rgba(0, 123, 255, 0.05);
+}
+
+.green-border:hover,
+.blue-border:hover {
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+/* ===============================
+   6. Kiosk Info Buttons
+=============================== */
+.kiosk-info-section {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 12px;
+  text-align: center;
+  margin-top: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.kiosk-info-section p {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.kiosk-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.btn-link1,
+.btn-link5g {
+  background-color: white;
+  border-radius: 5px;
+  padding: 8px 16px;
+  font-size: 14px;
+  border-width: 2px;
+  border-style: solid;
+  cursor: pointer;
+}
+
+.btn-link1 {
+  color: #28a745;
+  border-color: #28a745;
+}
+.btn-link5g {
+  color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-link1:hover,
+.btn-link5g:hover {
+  opacity: 0.8;
+}
+
+/* ===============================
+   7. Image Modal Overlay
+=============================== */
 #image-overlay {
   position: fixed;
   top: 0;
@@ -169,8 +272,8 @@ button, input, select {
 }
 
 #image-overlay img {
-  max-width: 90%;
-  max-height: 90%;
+  max-width: 70%;
+  max-height: 70%;
   border-radius: 10px;
 }
 
@@ -178,45 +281,65 @@ button, input, select {
   margin-top: 20px;
   padding: 10px 20px;
   font-size: 16px;
+  cursor: pointer;
 }
 
-/* ==============================
-   Kiosk Info Section
-============================== */
-.kiosk-info-section {
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 12px;
-  text-align: center;
-  margin-top: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+/* ===============================
+   8. Toast Popup (Guide Tip)
+=============================== */
+.toast-guide {
+  position: absolute;
+  bottom: 60%;
+  left: 40%;
+  background-color: #aa7f7f;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 6px;
+  opacity: 0.95;
+  display: none;
+  z-index: 1000;
+  font-size: 20px;
+  white-space: nowrap;
 }
 
-.kiosk-info-section p {
-  font-size: 15px;
-  color: #333;
-  margin-bottom: 10px;
+/* ===============================
+   9. Basemap Style Switcher
+=============================== */
+.basemap-switcher {
+  position: absolute;
+  top:10px;
+  right: 50px;
+  z-index: 1000;
+  background: rgba(160, 152, 152, 0.9);
+  padding: 3px;
+  border-radius: 4px;
 }
 
-.kiosk-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
+.basemap-switcher select {
+  font-size: 12px;
+  padding: 4px 8px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
-/* Kiosk Buttons */
-.btn-link1, .btn-link5g {
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 5px;
-  font-size: 14px;
+/* ===============================
+   10. Highlighted Kiosk Marker
+=============================== */
+.mapboxgl-circle-neon {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: transparent;
+  border: 2px solid rgba(255, 51, 51, 0.5);
+  box-shadow: 0 0 6px 2px rgba(255, 51, 51, 0.3);
+
+  /* Fix alignment */
+  transform: translate(-50%, -50%);
 }
 
-.btn-link1 { background-color: #28a745; }
-.btn-link5g { background-color: #007bff; }
 
-.btn-link1:hover, .btn-link5g:hover {
-  opacity: 0.8;
+.mapboxgl-circle-neon:hover {
+  box-shadow: 0 0 12px 4px rgba(255, 51, 51, 1);
+  transition: box-shadow 0.3s ease;
 }
